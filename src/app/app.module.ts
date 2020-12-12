@@ -7,6 +7,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { RegisterComponent } from './register/register.component';
+import { NotebookComponent } from './notebook/notebook.component';
 
 const materialModules = [MatToolbarModule]
 
@@ -14,7 +16,9 @@ const materialModules = [MatToolbarModule]
   declarations: [
     AppComponent,
     NavbarComponent,
-    SignInComponent
+    SignInComponent,
+    RegisterComponent,
+    NotebookComponent
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,14 @@
 <div class="container">
   <mat-toolbar layout="row" color="primary" class="navbar">
-    <div>Notebook</div>
+    <div> <a *ngIf="logedInUser; else logInLink" routerLink="notebook">Notebook</a></div>
+    <ng-template #logInLink>
+      <div> <a routerLink="">Notebook</a></div>
+    </ng-template>
     <div>
-      <a routerLink="/sign-in" routerLinkActive="active">Sign in</a>
-      <a>Sign out</a>
-      <a>Register</a>
+      <a *ngIf="logedInUser; else unauthorizedUser ">Sign out</a>
+      <ng-template #unauthorizedUser>
+        <a routerLink="register">Register</a>
+      </ng-template>
     </div>
   </mat-toolbar>
 </div>
