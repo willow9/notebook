@@ -1,3 +1,12 @@
-<p>
-  register works!
-</p>
+<div class="center">
+  <form [formGroup]='rForm' (ngSubmit)="registerUser(rForm.value)">
+    <mat-form-field>
+      <input matInput placeholder="email" type="email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="password">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+    <button mat-raised-button color="primary">Signup</button>
+  </form>
+</div>
