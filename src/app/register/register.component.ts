@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RegisterService } from './register.service';
+import { AuthService } from '../authService';
 import { Router } from "@angular/router"
 
 @Component({
@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
   rForm: FormGroup;
   error: string = null
 
-  constructor(private fb: FormBuilder, private regService: RegisterService, private router: Router) {
+  constructor(private fb: FormBuilder, private regService: AuthService, private router: Router) {
     this.rForm = fb.group({
       'email': [null, [Validators.required, Validators.email]],
       'password': [null, Validators.compose([Validators.required, Validators.minLength(6)])]

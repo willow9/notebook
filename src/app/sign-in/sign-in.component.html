@@ -1,4 +1,5 @@
 <div class="center">
+  <div>{{error}}</div>
   <form [formGroup]='rForm' (ngSubmit)="loginUser(rForm.value)">
     <mat-form-field>
       <input matInput placeholder="email" type="email" formControlName="email">
