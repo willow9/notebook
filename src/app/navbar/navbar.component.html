@@ -5,7 +5,7 @@
       <div> <a routerLink="">Notebook</a></div>
     </ng-template>
     <div>
-      <a *ngIf="logedInUser; else unauthorizedUser ">Sign out</a>
+      <a *ngIf="logedInUser; else unauthorizedUser" (click)="logout()">Sign out</a>
       <ng-template #unauthorizedUser>
         <a routerLink="register">Register</a>
       </ng-template>

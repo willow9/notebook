@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from "rxjs/operators"
-import { throwError } from "rxjs"
+import { catchError, tap } from "rxjs/operators"
+import { Subject, throwError } from "rxjs"
+import { User } from './model/user.model';
 
 export interface AuthResponseData {
     kind: string,
@@ -16,9 +17,10 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    constructor(private http: HttpClient) {
+    user = new Subject<User>()
 
-    }
+    constructor(private http: HttpClient) { }
+
     signup(email: string, password: string) {
         return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC7x1KNJw2HZ8j0S95Taf-v3gr3w5989Is',
             {
@@ -26,19 +28,10 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true
             }
-        ).pipe(catchError(errorResponse => {
-            let errorMessage = "An unknown error occured";
-            if (!errorResponse.error || !errorResponse.error.error) {
-                return throwError(errorMessage)
-            }
+        ).pipe(catchError(this.handleErrors), tap(resData => {
+            this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn)
 
-            switch (errorResponse.error.error.message) {
-                case "EMAIL_EXISTS":
-                    errorMessage = "This email exists, please login."
-            }
-            return throwError(errorMessage)
-        })
-        );
+        }));
     }
 
     login(email: string, password: string) {
@@ -47,8 +40,24 @@ export class AuthService {
             email: email,
             password: password,
             returnSecureToken: true
-        }).pipe(catchError(this.handleErrors)
-        );
+        }).pipe(catchError(this.handleErrors), tap(resData => {
+            this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn)
+
+        }));
+    }
+    logout() {
+        this.user.next(null)
+    }
+
+    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000)
+        const user = new User(
+            email,
+            userId,
+            token,
+            expirationDate)
+
+        this.user.next(user)
     }
 
     private handleErrors(errorResponse: HttpErrorResponse) {
@@ -66,6 +75,9 @@ export class AuthService {
                 break;
             case "USER_DISABLED":
                 errorMessage = "The user account has been disabled by an administrator."
+                break;
+            case "EMAIL_EXISTS":
+                errorMessage = "This email exists, please login."
                 break;
         }
         return throwError(errorMessage)
