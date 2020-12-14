@@ -1,4 +1,5 @@
 <div class="center">
+  <p *ngIf="error">{{error}}</p>
   <form [formGroup]='rForm' (ngSubmit)="registerUser(rForm.value)">
     <mat-form-field>
       <input matInput placeholder="email" type="email" formControlName="email">
