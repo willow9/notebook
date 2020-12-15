@@ -16,8 +16,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { RegisterComponent } from './register/register.component';
 import { NotebookComponent } from './notebook/notebook.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RecordsListComponent } from './notebook/records-list/records-list.component';
+import { AddRecordComponent } from './notebook/add-record/add-record.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { LayoutModule } from '@angular/cdk/layout';
 
-const materialModules = [MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule]
+const materialModules = [
+  MatToolbarModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatIconModule,
+  MatButtonModule,
+  LayoutModule,
+  MatGridListModule,
+  MatCardModule,
+  MatMenuModule,
+]
 
 @NgModule({
   declarations: [
@@ -25,7 +41,10 @@ const materialModules = [MatToolbarModule, MatCardModule, MatFormFieldModule, Ma
     NavbarComponent,
     SignInComponent,
     RegisterComponent,
-    NotebookComponent
+    NotebookComponent,
+    RecordsListComponent,
+    AddRecordComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -34,8 +53,7 @@ const materialModules = [MatToolbarModule, MatCardModule, MatFormFieldModule, Ma
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    materialModules
-
+    materialModules,
   ],
   providers: [],
   bootstrap: [AppComponent]

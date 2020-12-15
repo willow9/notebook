@@ -1,13 +1,27 @@
-<div class="center">
-  <p *ngIf="error">{{error}}</p>
-  <form [formGroup]='rForm' (ngSubmit)="registerUser(rForm.value)">
-    <mat-form-field>
-      <input matInput placeholder="email" type="email" formControlName="email">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="password">
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </mat-form-field>
-    <button mat-raised-button color="primary">Signup</button>
-  </form>
-</div>
+<mat-grid-list cols="4" rowHeight="150px">
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="2">
+    <mat-card>
+      <mat-card-title>Sign up</mat-card-title>
+      <mat-card-subtitle style="color: red;">{{error}}</mat-card-subtitle>
+      <mat-card-content>
+        <form [formGroup]='rForm' (ngSubmit)="registerUser(rForm.value)">
+          <mat-form-field>
+            <input matInput placeholder="email" type="email" formControlName="email">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+          <button mat-raised-button color="primary">Sign up</button>
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+</mat-grid-list>
