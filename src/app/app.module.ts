@@ -11,9 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { MatIconModule } from '@angular/material/icon';
-import { RegisterComponent } from './register/register.component';
 import { NotebookComponent } from './notebook/notebook.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecordsListComponent } from './notebook/records-list/records-list.component';
@@ -21,6 +19,7 @@ import { AddRecordComponent } from './notebook/add-record/add-record.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AuthorizationComponent } from './authorization/authorization.component';
 
 const materialModules = [
   MatToolbarModule,
@@ -39,8 +38,7 @@ const materialModules = [
   declarations: [
     AppComponent,
     NavbarComponent,
-    SignInComponent,
-    RegisterComponent,
+    AuthorizationComponent,
     NotebookComponent,
     RecordsListComponent,
     AddRecordComponent,

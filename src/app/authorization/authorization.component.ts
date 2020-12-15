@@ -5,13 +5,15 @@ import { Observable } from 'rxjs';
 import { AuthResponseData, AuthService } from '../authService';
 
 @Component({
-  selector: 'app-sign-in',
-  templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.css']
+  selector: 'app-authorization',
+  templateUrl: './authorization.component.html',
+  styleUrls: ['./authorization.component.css']
 })
-export class SignInComponent implements OnInit {
+export class AuthorizationComponent implements OnInit {
   rForm: FormGroup;
-  error: string
+  error: string;
+  title: string = "Sign in";
+  signInTogle: boolean = true;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.rForm = fb.group({
@@ -20,6 +22,14 @@ export class SignInComponent implements OnInit {
     })
   }
 
+  togleSignIn() {
+    this.signInTogle = !this.signInTogle
+    this.title = "Sign in"
+  }
+  togleSignUp() {
+    this.signInTogle = !this.signInTogle
+    this.title = "Sign up"
+  }
   loginUser() {
     if (this.rForm.status === "VALID") {
       let authObs: Observable<AuthResponseData>
@@ -37,6 +47,23 @@ export class SignInComponent implements OnInit {
           setTimeout(() => { this.error = null }, 5000)
           console.log(errorMessage);
         })
+    }
+
+  }
+
+  registerUser() {
+
+    if (this.rForm.status === "VALID") {
+      this.authService.signup(this.rForm.value.email, this.rForm.value.password).subscribe(resData => {
+        this.rForm.reset()
+        this.router.navigate(["notebook"])
+      },
+        errorMessage => {
+          this.error = errorMessage
+          setTimeout(() => { this.error = null }, 5000)
+          console.log(errorMessage);
+        }
+      )
     }
 
   }
