@@ -5,7 +5,7 @@ import { HttpClientModule } from "@angular/common/http"
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecordsListComponent } from './notebook/records-list/records-list.component';
 import { AddRecordComponent } from './notebook/add-record/add-record.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AuthorizationComponent } from './authorization/authorization.component';
@@ -32,6 +33,8 @@ const materialModules = [
   MatGridListModule,
   MatCardModule,
   MatMenuModule,
+  MatTableModule,
+
 ]
 
 @NgModule({
@@ -47,7 +50,7 @@ const materialModules = [
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

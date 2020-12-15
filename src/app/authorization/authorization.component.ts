@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AuthResponseData, AuthService } from '../authService';
 
 @Component({
@@ -22,14 +22,12 @@ export class AuthorizationComponent implements OnInit {
     })
   }
 
-  togleSignIn() {
+  togleSignIn(title: string) {
     this.signInTogle = !this.signInTogle
-    this.title = "Sign in"
+    this.title = title
+    console.log(title);
   }
-  togleSignUp() {
-    this.signInTogle = !this.signInTogle
-    this.title = "Sign up"
-  }
+
   loginUser() {
     if (this.rForm.status === "VALID") {
       let authObs: Observable<AuthResponseData>

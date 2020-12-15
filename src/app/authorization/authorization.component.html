@@ -21,8 +21,9 @@
         </form>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button *ngIf="signInTogle" (click)="togleSignUp()">Don't have account?</button>
-        <button mat-button *ngIf="!signInTogle" (click)="togleSignIn()">Have an account?</button>
+        <button mat-button *ngIf="signInTogle" (click)="togleSignIn('Sign up')">Don't have
+          account?</button>
+        <button mat-button *ngIf="!signInTogle" (click)="togleSignIn('Sign in')">Have an account?</button>
       </mat-card-actions>
     </mat-card>
   </mat-grid-tile>
