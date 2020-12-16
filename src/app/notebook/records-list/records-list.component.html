@@ -1,1 +1,25 @@
-<div>record list works</div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let record"> {{record.phoneNumber}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let record"> {{record.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="internalTitle">
+        <th mat-header-cell *matHeaderCellDef> Internal Title </th>
+        <td mat-cell *matCellDef="let record"> {{record.internalTitle}} </td>
+    </ng-container>
+    <ng-container matColumnDef="externalTitle">
+        <th mat-header-cell *matHeaderCellDef> External Title </th>
+        <td mat-cell *matCellDef="let record"> {{record.externalTitle}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>

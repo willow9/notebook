@@ -25,7 +25,6 @@ export class AuthorizationComponent implements OnInit {
   togleSignIn(title: string) {
     this.signInTogle = !this.signInTogle
     this.title = title
-    console.log(title);
   }
 
   loginUser() {

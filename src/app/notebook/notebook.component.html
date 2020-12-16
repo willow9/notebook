@@ -1,37 +1,11 @@
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <app-records-list></app-records-list>
-        </div>
-        <div class="col-6">
-            <app-add-record></app-add-record>
-        </div>
-    </div>
-</div> -->
-
-<!-- <mat-grid-list cols="2" rowHeight="100px">
-    <mat-grid-tile>
-        <mat-card style="background-color: aliceblue;">
-            <app-records-list></app-records-list>
-        </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile>
-        <mat-card style="background-color: rgb(48, 88, 122);">
-            <app-add-record></app-add-record>
-        </mat-card>
-    </mat-grid-tile>
-</mat-grid-list> -->
-
-
 <div class="grid-container">
-
-    <mat-grid-list cols="2" rowHeight="350px">
-        <mat-grid-tile rowspan="2">
-            <mat-card class="dashboard-card">
+    <mat-grid-list cols="3" rowHeight="350px">
+        <mat-grid-tile rowspan="2" colspan="2">
+            <div class="dashboard-card">
 
                 <app-records-list></app-records-list>
 
-            </mat-card>
+            </div>
         </mat-grid-tile>
         <mat-grid-tile>
             <mat-card class="dashboard-card">
@@ -40,6 +14,5 @@
 
             </mat-card>
         </mat-grid-tile>
-
     </mat-grid-list>
 </div>
