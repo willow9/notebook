@@ -1,1 +1,24 @@
-<p>add-record works!</p>
+<mat-card-title>New Record</mat-card-title>
+
+<mat-card-content>
+    <form>
+
+        <mat-form-field>
+            <input matInput placeholder="Phone">
+        </mat-form-field>
+
+        <mat-form-field class="custom-textarea">
+            <textarea matInput placeholder="Description" rows="5"></textarea>
+        </mat-form-field>
+
+        <mat-form-field class="custom-textarea">
+            <textarea matInput placeholder="Internal Title" rows="5"></textarea>
+        </mat-form-field>
+
+        <mat-form-field class="custom-textarea">
+            <textarea matInput placeholder="External Title" rows="5"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary">Save</button>
+    </form>
+</mat-card-content>
