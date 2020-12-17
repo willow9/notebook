@@ -1,5 +1,9 @@
+import { subscribeOn } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Record } from "../../model/record.model"
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { RecordService } from 'src/app/record.service';
 
 @Component({
   selector: 'app-add-record',
@@ -7,18 +11,24 @@ import { Record } from "../../model/record.model"
   styleUrls: ['./add-record.component.css']
 })
 export class AddRecordComponent implements OnInit {
-  records: Record[] = [
-    new Record(
-      "86526587", "phone of CEO",
-      "some internaltitle",
-      "some external title"),
-    new Record(
-      "86526587", "phone of Manager",
-      "some internaltitle for m",
-      "some external title for m")
-  ]
+  aForm: FormGroup;
 
-  constructor() { }
+  constructor(private fb: FormBuilder, private http: HttpClient, private recordService: RecordService) {
+    this.aForm = fb.group({
+      "phone": [null, [Validators.required]],
+      "description": [null, [Validators.required]],
+      "internal": [null, [Validators.required]],
+      "external": [null, [Validators.required]],
+    })
+  }
+  addRecord(form) {
+    if (this.aForm.status == "VALID") {
+    }
+
+    this.recordService.postRecord(this.aForm.value.phone, this.aForm.value.description, this.aForm.value.internal, this.aForm.value.external).subscribe(response => {
+    })
+
+  }
 
   ngOnInit(): void {
   }

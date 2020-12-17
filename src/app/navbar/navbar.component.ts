@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   userSub: Subscription
-  logedInUser = true;
+  logedInUser = false;
 
   constructor(private authService: AuthService, private router: Router) { }
 

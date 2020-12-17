@@ -1,4 +1,6 @@
+import { Subscription } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { RecordService } from 'src/app/record.service';
 
 import { Record } from "../../model/record.model"
 
@@ -12,21 +14,34 @@ import { Record } from "../../model/record.model"
 export class RecordsListComponent implements OnInit {
 
 
-  records: Record[] = [
-    new Record(
-      "86526587", "phone of CEO",
-      "some internaltitle",
-      "some external title"),
-    new Record(
-      "86526587", "phone of Manager",
-      "some internaltitle for m",
-      "some external title for m3333 kkkk jhhggyyy jjkkk")
-  ]
+
+  records: Record[] = []
+  dataSource = []
+
+
+  constructor(private recordService: RecordService) {
+
+    this.recordService.getRecord().subscribe(recordsData => {
+      recordsData.forEach(record => {
+        this.records.push(new Record(record.phone, record.description, record.internal, record.external, record.recordId))
+      })
+      return this.dataSource = this.records
+    })
+  }
+
+
+  ngOnInit(): void {
+
+
+    // console.log(this.records);
+
+    // console.log(this.dataSource);
+    console.log("ping");
+
+  }
 
   displayedColumns: string[] = ['phoneNumber', 'description', 'internalTitle', 'externalTitle'];
-  dataSource = this.records;
 
-  constructor() { }
-  ngOnInit(): void { }
+
 
 }
