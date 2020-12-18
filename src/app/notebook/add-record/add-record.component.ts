@@ -1,8 +1,5 @@
-import { subscribeOn } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Record } from "../../model/record.model"
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RecordService } from 'src/app/record.service';
 
 @Component({
@@ -10,10 +7,11 @@ import { RecordService } from 'src/app/record.service';
   templateUrl: './add-record.component.html',
   styleUrls: ['./add-record.component.css']
 })
-export class AddRecordComponent implements OnInit {
+export class AddRecordComponent implements OnInit, OnDestroy {
+
   aForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private recordService: RecordService) {
+  constructor(private fb: FormBuilder, private recordService: RecordService) {
     this.aForm = fb.group({
       "phone": [null, [Validators.required]],
       "description": [null, [Validators.required]],
@@ -23,14 +21,19 @@ export class AddRecordComponent implements OnInit {
   }
   addRecord(form) {
     if (this.aForm.status == "VALID") {
+      this.recordService.postRecord(
+        this.aForm.value.phone,
+        this.aForm.value.description,
+        this.aForm.value.internal,
+        this.aForm.value.external)
+        .subscribe(response => {
+        })
+      this.recordService.newRecordEmitter.next(true)
     }
-
-    this.recordService.postRecord(this.aForm.value.phone, this.aForm.value.description, this.aForm.value.internal, this.aForm.value.external).subscribe(response => {
-    })
-
   }
 
   ngOnInit(): void {
   }
+  ngOnDestroy() { }
 
 }

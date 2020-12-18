@@ -1,9 +1,10 @@
 import { Subscription } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RecordService } from 'src/app/record.service';
 
 import { Record } from "../../model/record.model"
-
+import { MatTableDataSource } from '@angular/material/table';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -11,37 +12,40 @@ import { Record } from "../../model/record.model"
   templateUrl: './records-list.component.html',
   styleUrls: ['./records-list.component.css']
 })
-export class RecordsListComponent implements OnInit {
-
-
+export class RecordsListComponent implements OnInit, OnDestroy {
 
   records: Record[] = []
-  dataSource = []
+  addRecordSubscription: Subscription
+  displayedColumns: string[] = ['phoneNumber', 'description', 'internalTitle', 'externalTitle'];
+  dataSource: MatTableDataSource<Record>
 
+  constructor(private recordService: RecordService) { }
 
-  constructor(private recordService: RecordService) {
+  ngOnInit(): void {
+    this.recordService.getRecord().subscribe(recordsData => { this.shapeRecordsArray(recordsData) })
 
-    this.recordService.getRecord().subscribe(recordsData => {
-      recordsData.forEach(record => {
-        this.records.push(new Record(record.phone, record.description, record.internal, record.external, record.recordId))
-      })
-      return this.dataSource = this.records
+    this.addRecordSubscription = this.recordService.newRecordEmitter.subscribe(() => {
+      this.addNewRecordToTable()
     })
   }
 
-
-  ngOnInit(): void {
-
-
-    // console.log(this.records);
-
-    // console.log(this.dataSource);
-    console.log("ping");
-
+  private shapeRecordsArray(recordsData) {
+    recordsData.forEach(record => {
+      this.records.push(new Record(record.phone, record.description, record.internal, record.external, record.recordId))
+    })
+    this.dataSource = new MatTableDataSource(this.records)
   }
 
-  displayedColumns: string[] = ['phoneNumber', 'description', 'internalTitle', 'externalTitle'];
+  private addNewRecordToTable() {
 
+    this.recordService.newRecord.pipe(take(1)).subscribe((record) => {
+      this.records.unshift(record)
+      this.dataSource = new MatTableDataSource(this.records)
+    })
 
+  }
+  ngOnDestroy(): void {
+    this.addRecordSubscription.unsubscribe()
+  }
 
 }

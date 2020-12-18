@@ -1,9 +1,8 @@
 import { AuthService } from './authService';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, tap } from "rxjs/operators"
-import { Observable, Subject, Subscription, throwError } from "rxjs"
-import { User } from './model/user.model';
+import { map, tap } from "rxjs/operators"
+import { Subject } from "rxjs"
 import { Record } from './model/record.model';
 
 export interface AuthResponseData {
@@ -17,12 +16,16 @@ export interface AuthResponseData {
     displayName?: string,
 }
 
+export interface NewRecordResponse {
+    name: string
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class RecordService {
-    // user = new Subject<User>()
-
+    newRecord = new Subject<Record>()
     userId: string
+    newRecordEmitter = new Subject<boolean>()
 
 
     constructor(private http: HttpClient, private authService: AuthService) {
@@ -44,13 +47,16 @@ export class RecordService {
                 external: external
 
             }
-        );
+        ).pipe(tap((response: NewRecordResponse) => {
+            this.newRecord.next(new Record(phone, description, internal, external, response.name))
+        }))
     }
+
 
     getRecord() {
         return this.http.get(`https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`)
             .pipe(map(responseData => {
-                const recordsArray = []
+                const recordsArray: Record[] = []
                 for (const key in responseData) {
                     recordsArray.push({ ...responseData[key], recordId: key })
                 }
@@ -58,6 +64,7 @@ export class RecordService {
             }))
 
     }
+
 
 
 }
