@@ -1,4 +1,4 @@
-<div class="grid-container">
+<div class="grid-container" *ngIf="logedInUser">
     <mat-grid-list cols="3" rowHeight="280px">
         <mat-grid-tile rowspan="2" colspan="2">
             <div class="dashboard-card">
@@ -15,4 +15,11 @@
             </mat-card>
         </mat-grid-tile>
     </mat-grid-list>
+
+</div>
+
+<div class="card-wrapper">
+    <mat-card>
+        <mat-card-content *ngIf="!logedInUser">Please sign in</mat-card-content>
+    </mat-card>
 </div>

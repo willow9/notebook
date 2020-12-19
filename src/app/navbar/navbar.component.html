@@ -7,7 +7,7 @@
     <div>
       <a *ngIf="logedInUser; else unauthorizedUser" (click)="logout()">Sign out</a>
       <ng-template #unauthorizedUser>
-        <a routerLink="">Register</a>
+        <a routerLink="">Sign in</a>
       </ng-template>
     </div>
   </mat-toolbar>
