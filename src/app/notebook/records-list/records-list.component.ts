@@ -20,7 +20,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     "description",
     "internalTitle",
     "externalTitle",
+    "$$edit",
   ];
+  // displayedColumns: string[] = ["phoneNumber", "$$edit"];
   dataSource: MatTableDataSource<Record>;
 
   constructor(private recordService: RecordService) {}
@@ -50,6 +52,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       );
     });
     this.dataSource = new MatTableDataSource(this.records);
+  }
+
+  rowClicked(row: any) {
+    console.log(row);
+  }
+  delete(row: any) {
+    console.log(row);
   }
 
   private addNewRecordToTable() {
