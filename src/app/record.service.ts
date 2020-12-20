@@ -22,13 +22,14 @@ export interface NewRecordResponse {
 
 @Injectable({ providedIn: "root" })
 export class RecordService {
+  editRecordEmiter = new Subject<Record>();
   newRecord = new Subject<Record>();
   userId: string;
 
   newRecordEmitter = new Subject<boolean>();
 
   constructor(private http: HttpClient, private authService: AuthService) {
-    this.authService.user.subscribe((user) => {
+    this.authService.user.subscribe(user => {
       if (user != null) {
         this.userId = user.id;
       } else this.userId = "";
@@ -68,7 +69,7 @@ export class RecordService {
         `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`
       )
       .pipe(
-        map((responseData) => {
+        map(responseData => {
           const recordsArray: Record[] = [];
           for (const key in responseData) {
             recordsArray.push({ ...responseData[key], recordId: key });

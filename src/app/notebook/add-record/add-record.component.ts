@@ -34,6 +34,15 @@ export class AddRecordComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.recordService.editRecordEmiter.subscribe(record => {
+      this.aForm = this.fb.group({
+        phone: [record.phoneNumber, [Validators.required]],
+        description: [record.description, [Validators.required]],
+        internal: [record.internalTitle, [Validators.required]],
+        external: [record.externalTitle, [Validators.required]],
+      });
+    });
+  }
   ngOnDestroy(): void {}
 }
