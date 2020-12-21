@@ -5,17 +5,6 @@ import { map, tap } from "rxjs/operators";
 import { Observable, Subject } from "rxjs";
 import { Record } from "./model/record.model";
 
-export interface AuthResponseData {
-  kind: string;
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  registered?: boolean;
-  displayName?: string;
-}
-
 export interface NewRecordResponse {
   name: string;
 }
@@ -25,6 +14,7 @@ export class RecordService {
   editRecordEmiter = new Subject<Record>();
   newRecord = new Subject<Record>();
   userId: string;
+  editedRecord = new Subject<Record>();
 
   newRecordEmitter = new Subject<boolean>();
 
@@ -47,10 +37,10 @@ export class RecordService {
       .post(
         `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`,
         {
-          phone: phone,
+          phoneNumber: phone,
           description: description,
-          internal: internal,
-          external: external,
+          internalTitle: internal,
+          externalTitle: external,
         }
       )
       .pipe(
@@ -69,15 +59,29 @@ export class RecordService {
     internal: string,
     external: string
   ): Observable<Record> {
-    return this.http.patch<Record>(
-      `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`,
-      {
-        phone: phone,
-        description: description,
-        internal: internal,
-        external: external,
-      }
-    );
+    return this.http
+      .patch<any>(
+        `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`,
+        {
+          phoneNumber: phone,
+          description: description,
+          internalTitle: internal,
+          externalTitle: external,
+        }
+      )
+      .pipe(
+        tap(response => {
+          this.editedRecord.next(
+            new Record(
+              response.phoneNumber,
+              response.description,
+              response.internalTitle,
+              response.externalTitle,
+              docId
+            )
+          );
+        })
+      );
   }
 
   getRecord() {

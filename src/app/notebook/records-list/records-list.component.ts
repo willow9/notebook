@@ -1,7 +1,6 @@
 import { Subscription } from "rxjs";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RecordService } from "src/app/record.service";
-
 import { Record } from "../../model/record.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { take } from "rxjs/operators";
@@ -40,15 +39,23 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   useForEditing(record: Record): void {
     this.recordService.editRecordEmiter.next(record);
+    this.recordService.editedRecord.pipe(take(1)).subscribe(response => {
+      this.records = this.records.filter(record => {
+        return record.id !== response.id;
+      });
+      this.records.unshift(response);
+      this.dataSource = new MatTableDataSource(this.records);
+    });
   }
+
   private shapeRecordsArray(recordsData) {
     recordsData.forEach(record => {
       this.records.push(
         new Record(
-          record.phone,
+          record.phoneNumber,
           record.description,
-          record.internal,
-          record.external,
+          record.internalTitle,
+          record.externalTitle,
           record.recordId
         )
       );
