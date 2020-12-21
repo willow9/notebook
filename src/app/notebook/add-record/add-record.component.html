@@ -1,7 +1,11 @@
-<mat-card-title>New Record</mat-card-title>
+<mat-card-title *ngIf="!editFormToggle; else editRecordTemplate">New Record</mat-card-title>
+<ng-template #editRecordTemplate>
+    <mat-card-title>Edit Record</mat-card-title>
+</ng-template>
 
 <mat-card-content>
-    <form [formGroup]="aForm" (ngSubmit)=(addRecord(aForm.value))>
+    <form [formGroup]="aForm" #formDirective="ngForm"
+        (ngSubmit)="!editFormToggle? addRecord(aForm.value, formDirective): editRecord(aForm.value)">
 
         <mat-form-field>
             <input matInput placeholder="Phone" formControlName="phone">

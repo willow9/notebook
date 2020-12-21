@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from "@angular/forms";
 import { RecordService } from "src/app/record.service";
 
 @Component({
@@ -11,6 +16,7 @@ import { RecordService } from "src/app/record.service";
 })
 export class AddRecordComponent implements OnInit, OnDestroy {
   aForm: FormGroup;
+  editFormToggle = false;
 
   constructor(private fb: FormBuilder, private recordService: RecordService) {
     this.aForm = fb.group({
@@ -20,7 +26,7 @@ export class AddRecordComponent implements OnInit, OnDestroy {
       external: [null, [Validators.required]],
     });
   }
-  addRecord(form): void {
+  addRecord(form: any, formDirective: FormGroupDirective): void {
     if (this.aForm.status == "VALID") {
       this.recordService
         .postRecord(
@@ -29,13 +35,22 @@ export class AddRecordComponent implements OnInit, OnDestroy {
           this.aForm.value.internal,
           this.aForm.value.external
         )
-        .subscribe(() => {});
+        .subscribe(() => {
+          formDirective.resetForm();
+          this.aForm.reset();
+        });
       this.recordService.newRecordEmitter.next(true);
     }
   }
 
+  editRecord() {
+    console.log(this.aForm);
+    this.editFormToggle = false;
+  }
+
   ngOnInit(): void {
     this.recordService.editRecordEmiter.subscribe(record => {
+      this.editFormToggle = true;
       this.aForm = this.fb.group({
         phone: [record.phoneNumber, [Validators.required]],
         description: [record.description, [Validators.required]],
