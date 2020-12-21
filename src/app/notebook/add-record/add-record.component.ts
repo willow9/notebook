@@ -17,6 +17,7 @@ import { RecordService } from "src/app/record.service";
 export class AddRecordComponent implements OnInit, OnDestroy {
   aForm: FormGroup;
   editFormToggle = false;
+  recordId: string;
 
   constructor(private fb: FormBuilder, private recordService: RecordService) {
     this.aForm = fb.group({
@@ -43,13 +44,25 @@ export class AddRecordComponent implements OnInit, OnDestroy {
     }
   }
 
-  editRecord() {
-    console.log(this.aForm);
-    this.editFormToggle = false;
+  editRecord(form, formDirective: FormGroupDirective): void {
+    this.recordService
+      .editRecord(
+        this.recordId,
+        this.aForm.value.phone,
+        this.aForm.value.description,
+        this.aForm.value.internal,
+        this.aForm.value.external
+      )
+      .subscribe(() => {
+        this.editFormToggle = false;
+        formDirective.resetForm();
+        this.aForm.reset();
+      });
   }
 
   ngOnInit(): void {
     this.recordService.editRecordEmiter.subscribe(record => {
+      this.recordId = record.id;
       this.editFormToggle = true;
       this.aForm = this.fb.group({
         phone: [record.phoneNumber, [Validators.required]],

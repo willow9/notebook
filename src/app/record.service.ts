@@ -2,7 +2,7 @@ import { AuthService } from "./authService";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, tap } from "rxjs/operators";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Record } from "./model/record.model";
 
 export interface AuthResponseData {
@@ -53,7 +53,6 @@ export class RecordService {
           external: external,
         }
       )
-
       .pipe(
         tap((response: NewRecordResponse) => {
           this.newRecord.next(
@@ -61,6 +60,24 @@ export class RecordService {
           );
         })
       );
+  }
+
+  editRecord(
+    docId: string,
+    phone: string,
+    description: string,
+    internal: string,
+    external: string
+  ): Observable<Record> {
+    return this.http.patch<Record>(
+      `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`,
+      {
+        phone: phone,
+        description: description,
+        internal: internal,
+        external: external,
+      }
+    );
   }
 
   getRecord() {
