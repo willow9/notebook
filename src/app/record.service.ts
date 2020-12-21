@@ -32,7 +32,6 @@ export class RecordService {
     internal: string,
     external: string
   ) {
-    console.log(this.userId);
     return this.http
       .post(
         `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`,
@@ -99,5 +98,11 @@ export class RecordService {
           return recordsArray;
         })
       );
+  }
+
+  deleteRecord(docId: string) {
+    return this.http.delete(
+      `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`
+    );
   }
 }

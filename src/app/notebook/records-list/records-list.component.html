@@ -25,7 +25,7 @@
                 <mat-icon aria-hidden="false" color="primary" (click)=useForEditing(record)>edit</mat-icon>
             </button>
             <button mat-icon-button>
-                <mat-icon aria-hidden="false" color="warn">delete_forever</mat-icon>
+                <mat-icon aria-hidden="false" color="warn" (click)=delete(record.id)>delete_forever</mat-icon>
             </button>
         </td>
     </ng-container>

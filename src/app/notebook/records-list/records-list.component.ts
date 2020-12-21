@@ -47,6 +47,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(this.records);
     });
   }
+  delete(docId: string): void {
+    this.recordService.deleteRecord(docId).subscribe(() => {
+      this.records = this.records.filter(record => {
+        return record.id !== docId;
+      });
+      this.dataSource = new MatTableDataSource(this.records);
+    });
+  }
 
   private shapeRecordsArray(recordsData) {
     recordsData.forEach(record => {
