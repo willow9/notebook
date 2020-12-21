@@ -21,6 +21,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatMenuModule } from "@angular/material/menu";
 import { LayoutModule } from "@angular/cdk/layout";
 import { AuthorizationComponent } from "./authorization/authorization.component";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 const materialModules = [
   MatToolbarModule,
@@ -34,6 +35,7 @@ const materialModules = [
   MatCardModule,
   MatMenuModule,
   MatTableModule,
+  MatPaginatorModule,
 ];
 
 @NgModule({

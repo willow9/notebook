@@ -1,9 +1,10 @@
 import { Subscription } from "rxjs";
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { RecordService } from "src/app/record.service";
 import { Record } from "../../model/record.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { take } from "rxjs/operators";
+import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
   selector: "app-records-list",
@@ -22,6 +23,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     "actions",
   ];
   dataSource: MatTableDataSource<Record>;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private recordService: RecordService) {}
 
@@ -45,6 +47,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       });
       this.records.unshift(response);
       this.dataSource = new MatTableDataSource(this.records);
+      this.dataSource.paginator = this.paginator;
     });
   }
   delete(docId: string): void {
@@ -53,6 +56,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         return record.id !== docId;
       });
       this.dataSource = new MatTableDataSource(this.records);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -69,12 +73,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       );
     });
     this.dataSource = new MatTableDataSource(this.records);
+    this.dataSource.paginator = this.paginator;
   }
 
   private addNewRecordToTable() {
     this.recordService.newRecord.pipe(take(1)).subscribe(record => {
       this.records.unshift(record);
       this.dataSource = new MatTableDataSource(this.records);
+      this.dataSource.paginator = this.paginator;
     });
   }
   ngOnDestroy(): void {
