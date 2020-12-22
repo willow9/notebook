@@ -10,3 +10,7 @@
 .mat-card {
   width: 500px;
 }
+.center {
+  margin: 10% auto auto auto;
+  width: 25%;
+}
