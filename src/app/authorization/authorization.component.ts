@@ -13,6 +13,7 @@ export class AuthorizationComponent implements OnInit {
   rForm: FormGroup;
   error: string;
   title = "Sign in";
+  hide = true;
 
   signInTogle = true;
 
