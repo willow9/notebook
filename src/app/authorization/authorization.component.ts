@@ -46,8 +46,7 @@ export class AuthorizationComponent implements OnInit {
       );
 
       authObs.subscribe(
-        resData => {
-          console.log(resData);
+        () => {
           this.router.navigate(["notebook"]);
         },
 

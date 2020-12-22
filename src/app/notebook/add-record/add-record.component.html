@@ -9,6 +9,7 @@
 
         <mat-form-field>
             <input matInput placeholder="Phone" formControlName="phone">
+            <mat-error *ngIf="aForm.get('phone').invalid">E.g. +370xxxxxxxx</mat-error>
         </mat-form-field>
 
         <mat-form-field class="custom-textarea">

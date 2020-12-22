@@ -21,7 +21,11 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private recordService: RecordService) {
     this.aForm = fb.group({
-      phone: [null, [Validators.required]],
+      phone: [
+        null,
+        // eslint-disable-next-line prettier/prettier
+        [Validators.required, Validators.pattern("[+|8]{1}[0-9]{8,11}")],
+      ],
       description: [null, [Validators.required]],
       internal: [null, [Validators.required]],
       external: [null, [Validators.required]],
