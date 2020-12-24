@@ -1,3 +1,4 @@
+import { RecordsEffects } from "./store/effects/records.efects";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
@@ -26,6 +27,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { StoreModule } from "@ngrx/store";
 import { recordsReducer } from "./store/reducers/records.reducer";
 import * as fromAppReducer from "./store/reducers/app.reducer";
+import { EffectsModule } from "@ngrx/effects";
 
 const materialModules = [
   MatToolbarModule,
@@ -59,6 +61,7 @@ const materialModules = [
     ReactiveFormsModule,
     HttpClientModule,
     StoreModule.forRoot(fromAppReducer.appReducer),
+    EffectsModule.forRoot([RecordsEffects]),
     materialModules,
   ],
   providers: [],

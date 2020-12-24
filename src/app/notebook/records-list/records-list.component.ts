@@ -34,11 +34,20 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.recordService.getRecord().subscribe(() => {
-      this.store.select("recordsRecucer").subscribe(state => {
-        this.shapeRecordsArray(state.records);
-      });
+    this.store.dispatch(
+      new RecordsActions.FetchingStarted("wYd4upSTkjQXZl6CGeCDTrC2UHB2")
+    );
+    this.store.select("recordsRecucer").subscribe(state => {
+      this.shapeRecordsArray(state.records);
     });
+
+    // this.store.dispatch(new RecordsActions.SetRecords(this.records));
+
+    // this.recordService.getRecord().subscribe(() => {
+    //   this.store.select("recordsRecucer").subscribe(state => {
+    //     this.shapeRecordsArray(state.records);
+    //   });
+    // });
 
     this.addRecordSubscription = this.recordService.newRecordEmitter.subscribe(
       () => {
