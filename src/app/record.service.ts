@@ -4,6 +4,9 @@ import { Injectable } from "@angular/core";
 import { map, tap } from "rxjs/operators";
 import { Observable, Subject } from "rxjs";
 import { Record } from "./model/record.model";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from "./store/reducers/app.reducer";
+import * as RecordsActions from "./store/actions/record.actions";
 
 export interface NewRecordResponse {
   name: string;
@@ -17,8 +20,13 @@ export class RecordService {
   editedRecord = new Subject<Record>();
 
   newRecordEmitter = new Subject<boolean>();
+  allRecords: Record[] = [];
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private store: Store<fromAppReducer.AppState>
+  ) {
     this.authService.user.subscribe(user => {
       if (user != null) {
         this.userId = user.id;
@@ -96,6 +104,9 @@ export class RecordService {
           }
 
           return recordsArray;
+        }),
+        tap(records => {
+          this.store.dispatch(new RecordsActions.SetRecords(records));
         })
       );
   }

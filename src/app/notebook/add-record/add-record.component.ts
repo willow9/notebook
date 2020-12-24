@@ -1,3 +1,4 @@
+import { Record } from "./../../model/record.model";
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
 import { Component, OnInit, OnDestroy } from "@angular/core";
@@ -7,7 +8,9 @@ import {
   FormGroupDirective,
   Validators,
 } from "@angular/forms";
+import { Store } from "@ngrx/store";
 import { RecordService } from "src/app/record.service";
+import * as fromRecordsReducer from "../../store/reducers/records.reducer";
 
 @Component({
   selector: "app-add-record",

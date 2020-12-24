@@ -2,7 +2,7 @@
   <mat-card-title>{{title}}</mat-card-title>
   <mat-card-subtitle style="color: red;">{{error}}</mat-card-subtitle>
   <mat-card-content>
-    <form [formGroup]='rForm' (ngSubmit)="signInTogle? loginUser(rForm.value): registerUser(rForm.value)">
+    <form [formGroup]='rForm' (ngSubmit)="signInTogle? loginUser(): registerUser()">
       <mat-form-field>
         <input matInput placeholder="email" type="email" formControlName="email">
       </mat-form-field>

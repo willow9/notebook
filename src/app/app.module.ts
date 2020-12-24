@@ -23,6 +23,10 @@ import { LayoutModule } from "@angular/cdk/layout";
 import { AuthorizationComponent } from "./authorization/authorization.component";
 import { MatPaginatorModule } from "@angular/material/paginator";
 
+import { StoreModule } from "@ngrx/store";
+import { recordsReducer } from "./store/reducers/records.reducer";
+import * as fromAppReducer from "./store/reducers/app.reducer";
+
 const materialModules = [
   MatToolbarModule,
   MatCardModule,
@@ -54,6 +58,7 @@ const materialModules = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    StoreModule.forRoot(fromAppReducer.appReducer),
     materialModules,
   ],
   providers: [],

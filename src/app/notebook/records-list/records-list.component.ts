@@ -5,6 +5,9 @@ import { Record } from "../../model/record.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { take } from "rxjs/operators";
 import { MatPaginator } from "@angular/material/paginator";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from "../../store/reducers/app.reducer";
+import * as RecordsActions from "../../store/actions/record.actions";
 
 @Component({
   selector: "app-records-list",
@@ -25,11 +28,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<Record>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(private recordService: RecordService) {}
+  constructor(
+    private recordService: RecordService,
+    private store: Store<fromAppReducer.AppState>
+  ) {}
 
   ngOnInit(): void {
-    this.recordService.getRecord().subscribe(recordsData => {
-      this.shapeRecordsArray(recordsData);
+    this.recordService.getRecord().subscribe(() => {
+      this.store.select("recordsRecucer").subscribe(state => {
+        this.shapeRecordsArray(state.records);
+      });
     });
 
     this.addRecordSubscription = this.recordService.newRecordEmitter.subscribe(
