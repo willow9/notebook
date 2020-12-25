@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { forkJoin, Observable, of } from "rxjs";
+import { forkJoin, of } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
 import * as RecordsActions from "../actions/record.actions";
 import { Record } from "../../model/record.model";
@@ -51,8 +51,6 @@ export class RecordsEffects {
       return forkJoin([recordId$, record$])
         .pipe(
           map(res => {
-            console.log(res);
-
             const record = new Record(
               res[1].phoneNumber,
               res[1].description,
@@ -65,10 +63,7 @@ export class RecordsEffects {
         )
         .pipe(
           map(response => {
-            console.log(response);
-
-            // return new RecordsActions.AddRecord(response2);
-            return of();
+            return new RecordsActions.AddRecord(response);
           })
         );
     })

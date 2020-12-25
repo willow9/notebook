@@ -1,3 +1,4 @@
+import { AuthService } from "./../../authService";
 import { Subscription } from "rxjs";
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { RecordService } from "src/app/record.service";
@@ -16,7 +17,8 @@ import * as RecordsActions from "../../store/actions/record.actions";
 })
 export class RecordsListComponent implements OnInit, OnDestroy {
   records: Record[] = [];
-  addRecordSubscription: Subscription;
+  userSub: Subscription;
+  userId = null;
   // eslint-disable-next-line prettier/prettier
   displayedColumns: string[] = [
     "phoneNumber",
@@ -30,30 +32,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private recordService: RecordService,
-    private store: Store<fromAppReducer.AppState>
+    private store: Store<fromAppReducer.AppState>,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(
-      new RecordsActions.FetchingStarted("wYd4upSTkjQXZl6CGeCDTrC2UHB2")
-    );
+    this.userSub = this.authService.user.subscribe(user => {
+      this.userId = !user ? null : user.id;
+    });
+
+    this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));
     this.store.select("recordsRecucer").subscribe(state => {
       this.shapeRecordsArray(state.records);
     });
-
-    // this.store.dispatch(new RecordsActions.SetRecords(this.records));
-
-    // this.recordService.getRecord().subscribe(() => {
-    //   this.store.select("recordsRecucer").subscribe(state => {
-    //     this.shapeRecordsArray(state.records);
-    //   });
-    // });
-
-    this.addRecordSubscription = this.recordService.newRecordEmitter.subscribe(
-      () => {
-        this.addNewRecordToTable();
-      }
-    );
   }
 
   useForEditing(record: Record): void {
@@ -78,6 +69,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   private shapeRecordsArray(recordsData) {
+    this.records = [];
     recordsData.forEach(record => {
       this.records.push(
         new Record(
@@ -93,14 +85,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
   }
 
-  private addNewRecordToTable() {
-    this.recordService.newRecord.pipe(take(1)).subscribe(record => {
-      this.records.unshift(record);
-      this.dataSource = new MatTableDataSource(this.records);
-      this.dataSource.paginator = this.paginator;
-    });
-  }
   ngOnDestroy(): void {
-    this.addRecordSubscription.unsubscribe();
+    this.userSub.unsubscribe();
   }
 }

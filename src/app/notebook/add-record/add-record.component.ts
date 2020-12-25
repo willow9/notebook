@@ -1,3 +1,5 @@
+import { AuthService } from "./../../authService";
+import { Subscription } from "rxjs";
 import { Record } from "./../../model/record.model";
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-empty-function */
@@ -22,11 +24,14 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   aForm: FormGroup;
   editFormToggle = false;
   recordId: string;
+  userSub = Subscription;
+  userId = null;
 
   constructor(
     private fb: FormBuilder,
     private recordService: RecordService,
-    private store: Store<fromAppReducer.AppState>
+    private store: Store<fromAppReducer.AppState>,
+    private authService: AuthService
   ) {
     this.aForm = fb.group({
       phone: [
@@ -49,21 +54,9 @@ export class AddRecordComponent implements OnInit, OnDestroy {
             internalTitle: this.aForm.value.internal,
             externalTitle: this.aForm.value.external,
           },
-          userId: "kdkdkdkd",
+          userId: this.userId,
         })
       );
-      // this.recordService
-      //   .postRecord(
-      // this.aForm.value.phone,
-      // this.aForm.value.description,
-      // this.aForm.value.internal,
-      // this.aForm.value.external
-      //   )
-      //   .subscribe(() => {
-      //     formDirective.resetForm();
-      //     this.aForm.reset();
-      //   });
-      // this.recordService.newRecordEmitter.next(true);
     }
   }
 
@@ -84,6 +77,10 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.authService.user.subscribe(user => {
+      this.userId = !user ? null : user.id;
+    });
+
     this.recordService.editRecordEmiter.subscribe(record => {
       this.recordId = record.id;
       this.editFormToggle = true;
