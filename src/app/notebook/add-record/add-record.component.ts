@@ -8,9 +8,10 @@ import {
   FormGroupDirective,
   Validators,
 } from "@angular/forms";
-import { Store } from "@ngrx/store";
 import { RecordService } from "src/app/record.service";
-import * as fromRecordsReducer from "../../store/reducers/records.reducer";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from "../../store/reducers/app.reducer";
+import * as RecordsActions from "../../store/actions/record.actions";
 
 @Component({
   selector: "app-add-record",
@@ -22,7 +23,11 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   editFormToggle = false;
   recordId: string;
 
-  constructor(private fb: FormBuilder, private recordService: RecordService) {
+  constructor(
+    private fb: FormBuilder,
+    private recordService: RecordService,
+    private store: Store<fromAppReducer.AppState>
+  ) {
     this.aForm = fb.group({
       phone: [
         null,
@@ -36,18 +41,29 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
   addRecord(form: any, formDirective: FormGroupDirective): void {
     if (this.aForm.status == "VALID") {
-      this.recordService
-        .postRecord(
-          this.aForm.value.phone,
-          this.aForm.value.description,
-          this.aForm.value.internal,
-          this.aForm.value.external
-        )
-        .subscribe(() => {
-          formDirective.resetForm();
-          this.aForm.reset();
-        });
-      this.recordService.newRecordEmitter.next(true);
+      this.store.dispatch(
+        new RecordsActions.AdditionStarted({
+          record: {
+            phoneNumber: this.aForm.value.phone,
+            description: this.aForm.value.description,
+            internalTitle: this.aForm.value.internal,
+            externalTitle: this.aForm.value.external,
+          },
+          userId: "kdkdkdkd",
+        })
+      );
+      // this.recordService
+      //   .postRecord(
+      // this.aForm.value.phone,
+      // this.aForm.value.description,
+      // this.aForm.value.internal,
+      // this.aForm.value.external
+      //   )
+      //   .subscribe(() => {
+      //     formDirective.resetForm();
+      //     this.aForm.reset();
+      //   });
+      // this.recordService.newRecordEmitter.next(true);
     }
   }
 

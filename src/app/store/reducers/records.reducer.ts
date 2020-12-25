@@ -3,10 +3,12 @@ import * as RecordsActions from "./../actions/record.actions";
 
 export interface State {
   records: Record[];
+  fetchError: string;
 }
 
 const initialState: State = {
   records: [],
+  fetchError: null,
   //   startRecordEditing: null,
   //   startNewRecordAddition: false,
   // newRecord: null,
@@ -18,10 +20,12 @@ export function recordsReducer(
   action: RecordsActions.RecordsActions
 ) {
   switch (action.type) {
-    // case RecordActions.ADD_RECORD:
-    //   return { ...state, newRecord: action.payload };
+    case RecordsActions.ADD_RECORD:
+      return { ...state, records: [...state.records, action.payload] };
     case RecordsActions.SET_RECORDS:
-      return { ...state, records: [...action.payload] };
+      return { ...state, records: [...action.payload], fetchError: null };
+    case RecordsActions.FETCHING_FAILED:
+      return { ...state, fetchError: action.payload };
     default:
       return state;
   }
