@@ -9,11 +9,6 @@ export interface State {
 const initialState: State = {
   records: [],
   fetchError: null,
-  //   startRecordEditing: null,
-  //   startNewRecordAddition: false,
-  // newRecord: null,
-  //   userId: "",
-  //   editedRecord: null,
 };
 export function recordsReducer(
   state = initialState,
@@ -26,6 +21,14 @@ export function recordsReducer(
       return { ...state, records: [...action.payload], fetchError: null };
     case RecordsActions.FETCHING_FAILED:
       return { ...state, fetchError: action.payload };
+    case RecordsActions.EDIT_RECORD:
+      const filteredRecords = state.records.filter(r => {
+        return r.id !== action.payload.id;
+      });
+      return {
+        ...state,
+        records: [...filteredRecords, action.payload],
+      };
     default:
       return state;
   }

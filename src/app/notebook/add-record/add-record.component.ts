@@ -14,6 +14,7 @@ import { RecordService } from "src/app/record.service";
 import { Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
+import { Effect } from "@ngrx/effects";
 
 @Component({
   selector: "app-add-record",
@@ -57,23 +58,40 @@ export class AddRecordComponent implements OnInit, OnDestroy {
           userId: this.userId,
         })
       );
+      formDirective.resetForm();
+      this.aForm.reset();
     }
   }
 
   editRecord(form, formDirective: FormGroupDirective): void {
-    this.recordService
-      .editRecord(
-        this.recordId,
-        this.aForm.value.phone,
-        this.aForm.value.description,
-        this.aForm.value.internal,
-        this.aForm.value.external
-      )
-      .subscribe(() => {
-        this.editFormToggle = false;
-        formDirective.resetForm();
-        this.aForm.reset();
-      });
+    this.store.dispatch(
+      new RecordsActions.EditingStarted({
+        record: {
+          phoneNumber: this.aForm.value.phone,
+          description: this.aForm.value.description,
+          internalTitle: this.aForm.value.internal,
+          externalTitle: this.aForm.value.external,
+          id: this.recordId,
+        },
+        userId: this.userId,
+      })
+    );
+
+    formDirective.resetForm();
+    this.aForm.reset();
+    // this.recordService
+    //   .editRecord(
+    //     this.recordId,
+    //     this.aForm.value.phone,
+    //     this.aForm.value.description,
+    //     this.aForm.value.internal,
+    //     this.aForm.value.external
+    //   )
+    //   .subscribe(() => {
+    //     this.editFormToggle = false;
+    //     formDirective.resetForm();
+    //     this.aForm.reset();
+    //   });
   }
 
   ngOnInit(): void {

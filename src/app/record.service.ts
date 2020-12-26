@@ -34,82 +34,82 @@ export class RecordService {
     });
   }
 
-  postRecord(
-    phone: string,
-    description: string,
-    internal: string,
-    external: string
-  ) {
-    return this.http
-      .post(
-        `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`,
-        {
-          phoneNumber: phone,
-          description: description,
-          internalTitle: internal,
-          externalTitle: external,
-        }
-      )
-      .pipe(
-        tap((response: NewRecordResponse) => {
-          this.newRecord.next(
-            new Record(phone, description, internal, external, response.name)
-          );
-        })
-      );
-  }
+  // postRecord(
+  //   phone: string,
+  //   description: string,
+  //   internal: string,
+  //   external: string
+  // ) {
+  //   return this.http
+  //     .post(
+  //       `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`,
+  //       {
+  //         phoneNumber: phone,
+  //         description: description,
+  //         internalTitle: internal,
+  //         externalTitle: external,
+  //       }
+  //     )
+  //     .pipe(
+  //       tap((response: NewRecordResponse) => {
+  //         this.newRecord.next(
+  //           new Record(phone, description, internal, external, response.name)
+  //         );
+  //       })
+  //     );
+  // }
 
-  editRecord(
-    docId: string,
-    phone: string,
-    description: string,
-    internal: string,
-    external: string
-  ): Observable<Record> {
-    return this.http
-      .patch<any>(
-        `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`,
-        {
-          phoneNumber: phone,
-          description: description,
-          internalTitle: internal,
-          externalTitle: external,
-        }
-      )
-      .pipe(
-        tap(response => {
-          this.editedRecord.next(
-            new Record(
-              response.phoneNumber,
-              response.description,
-              response.internalTitle,
-              response.externalTitle,
-              docId
-            )
-          );
-        })
-      );
-  }
+  // editRecord(
+  //   docId: string,
+  //   phone: string,
+  //   description: string,
+  //   internal: string,
+  //   external: string
+  // ): Observable<Record> {
+  //   return this.http
+  //     .patch<any>(
+  //       `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`,
+  //       {
+  //         phoneNumber: phone,
+  //         description: description,
+  //         internalTitle: internal,
+  //         externalTitle: external,
+  //       }
+  //     )
+  //     .pipe(
+  //       tap(response => {
+  //         this.editedRecord.next(
+  //           new Record(
+  //             response.phoneNumber,
+  //             response.description,
+  //             response.internalTitle,
+  //             response.externalTitle,
+  //             docId
+  //           )
+  //         );
+  //       })
+  //     );
+  // }
 
-  getRecord() {
-    return this.http
-      .get(
-        `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`
-      )
-      .pipe(
-        map(responseData => {
-          const recordsArray: Record[] = [];
-          for (const key in responseData) {
-            recordsArray.push({ ...responseData[key], recordId: key });
-          }
+  // getRecord() {
+  //   return this.http
+  //     .get(
+  //       `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}.json`
+  //     )
+  //     .pipe(
+  //       map(responseData => {
+  //         const recordsArray: Record[] = [];
+  //         for (const key in responseData) {
+  //           recordsArray.push({ ...responseData[key], recordId: key });
+  //         }
 
-          return recordsArray;
-        }),
-        tap(records => {
-          this.store.dispatch(new RecordsActions.SetRecords(records));
-        })
-      );
-  }
+  //         return recordsArray;
+  //       }),
+  //       tap(records => {
+  //         this.store.dispatch(new RecordsActions.SetRecords(records));
+  //       })
+  //     );
+  // }
 
   deleteRecord(docId: string) {
     return this.http.delete(

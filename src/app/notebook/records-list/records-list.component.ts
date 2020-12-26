@@ -49,14 +49,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   useForEditing(record: Record): void {
     this.recordService.editRecordEmiter.next(record);
-    this.recordService.editedRecord.pipe(take(1)).subscribe(response => {
-      this.records = this.records.filter(record => {
-        return record.id !== response.id;
-      });
-      this.records.unshift(response);
-      this.dataSource = new MatTableDataSource(this.records);
-      this.dataSource.paginator = this.paginator;
-    });
+    // this.recordService.editedRecord.pipe(take(1)).subscribe(response => {
+    //   this.records = this.records.filter(record => {
+    //     return record.id !== response.id;
+    //   });
+    //   this.records.unshift(response);
+    //   this.dataSource = new MatTableDataSource(this.records);
+    //   this.dataSource.paginator = this.paginator;
+    // });
   }
   delete(docId: string): void {
     this.recordService.deleteRecord(docId).subscribe(() => {
@@ -77,7 +77,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           record.description,
           record.internalTitle,
           record.externalTitle,
-          record.recordId
+          record.id
         )
       );
     });
