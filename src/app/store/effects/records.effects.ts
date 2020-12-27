@@ -1,4 +1,4 @@
-import { EditRecord } from "./../actions/record.actions";
+import { EditRecord } from "../actions/record.actions";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { forkJoin, Observable, of, pipe } from "rxjs";
@@ -26,8 +26,6 @@ export class RecordsEffects {
             return new RecordsActions.SetRecords(recordsArray);
           }),
           catchError(error => {
-            console.log(error);
-
             return of(new RecordsActions.FetchingFailed(error));
           })
         );

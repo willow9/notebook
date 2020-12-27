@@ -1,4 +1,5 @@
-import { RecordsEffects } from "./store/effects/records.efects";
+import { AuthEffects } from "./store/effects/auth.effects";
+import { RecordsEffects } from "./store/effects/records.effects";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
@@ -61,7 +62,7 @@ const materialModules = [
     ReactiveFormsModule,
     HttpClientModule,
     StoreModule.forRoot(fromAppReducer.appReducer),
-    EffectsModule.forRoot([RecordsEffects]),
+    EffectsModule.forRoot([RecordsEffects, AuthEffects]),
     materialModules,
   ],
   providers: [],

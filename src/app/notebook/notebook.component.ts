@@ -1,6 +1,7 @@
-import { AuthService } from "./../authService";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from "./../store/reducers/app.reducer";
 
 @Component({
   selector: "app-notebook",
@@ -10,12 +11,15 @@ import { Subscription } from "rxjs";
 export class NotebookComponent implements OnInit, OnDestroy {
   userSub: Subscription;
   logedInUser = false;
-  constructor(private authService: AuthService) {}
+  constructor(private store: Store<fromAppReducer.AppState>) {}
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(user => {
-      this.logedInUser = !user ? null : true;
+    this.userSub = this.store.select("authReducer").subscribe(state => {
+      this.logedInUser = !!state.user;
     });
+    // this.userSub = this.authService.user.subscribe(user => {
+    //   this.logedInUser = !user ? null : true;
+    // });
   }
 
   ngOnDestroy(): void {

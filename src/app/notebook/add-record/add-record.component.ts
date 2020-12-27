@@ -46,7 +46,7 @@ export class AddRecordComponent implements OnInit, OnDestroy {
     });
   }
   addRecord(form: any, formDirective: FormGroupDirective): void {
-    if (this.aForm.status == "VALID") {
+    if (this.aForm.status == "VALID" && this.userId) {
       this.store.dispatch(
         new RecordsActions.AdditionStarted({
           record: {
@@ -96,9 +96,12 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authService.user.subscribe(user => {
-      this.userId = !user ? null : user.id;
+    this.store.select("authReducer").subscribe(state => {
+      this.userId = state.user.id;
     });
+    // this.authService.user.subscribe(user => {
+    //   this.userId = !user ? null : user.id;
+    // });
 
     this.recordService.editRecordEmiter.subscribe(record => {
       this.recordId = record.id;
