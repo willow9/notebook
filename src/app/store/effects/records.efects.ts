@@ -96,6 +96,15 @@ export class RecordsEffects {
         );
     })
   );
+  @Effect({ dispatch: false })
+  recordDeletion = this.actions$.pipe(
+    ofType(RecordsActions.DELETE),
+    switchMap((data: RecordsActions.Delete) => {
+      return this.http.delete(
+        `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${data.payload.userId}/${data.payload.recordId}.json`
+      );
+    })
+  );
 
   constructor(private actions$: Actions, private http: HttpClient) {}
 }

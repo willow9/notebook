@@ -29,6 +29,13 @@ export function recordsReducer(
         ...state,
         records: [...filteredRecords, action.payload],
       };
+    case RecordsActions.DELETE:
+      return {
+        ...state,
+        records: state.records.filter(r => {
+          return r.id !== action.payload.recordId;
+        }),
+      };
     default:
       return state;
   }

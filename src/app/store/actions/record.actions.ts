@@ -7,6 +7,7 @@ export const FETCHING_FAILED = "FETCHING_FAILED";
 export const ADDITION_STARTED = "ADDITION_STARTED";
 export const EDITING_STARTED = "EDITING_STARTED";
 export const EDIT_RECORD = "EDIT_RECORD";
+export const DELETE = "DELETE";
 
 export class AddRecord implements Action {
   readonly type = ADD_RECORD;
@@ -41,6 +42,10 @@ export class EditRecord implements Action {
   readonly type = EDIT_RECORD;
   constructor(public payload: Record) {}
 }
+export class Delete implements Action {
+  readonly type = DELETE;
+  constructor(public payload: { recordId: string; userId: string }) {}
+}
 export type RecordsActions =
   | SetRecords
   | FetchingStarted
@@ -48,4 +53,5 @@ export type RecordsActions =
   | AdditionStarted
   | AddRecord
   | EditingStarted
-  | EditRecord;
+  | EditRecord
+  | Delete;

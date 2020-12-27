@@ -111,9 +111,9 @@ export class RecordService {
   //     );
   // }
 
-  deleteRecord(docId: string) {
-    return this.http.delete(
-      `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`
-    );
-  }
+  // deleteRecord(docId: string) {
+  //   return this.http.delete(
+  //     `https://notebook-1d5cb-default-rtdb.europe-west1.firebasedatabase.app/${this.userId}/${docId}.json`
+  //   );
+  // }
 }

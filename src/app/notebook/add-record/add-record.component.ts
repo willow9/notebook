@@ -79,6 +79,7 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
     formDirective.resetForm();
     this.aForm.reset();
+    this.editFormToggle = false;
     // this.recordService
     //   .editRecord(
     //     this.recordId,

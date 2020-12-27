@@ -59,13 +59,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     // });
   }
   delete(docId: string): void {
-    this.recordService.deleteRecord(docId).subscribe(() => {
-      this.records = this.records.filter(record => {
-        return record.id !== docId;
-      });
-      this.dataSource = new MatTableDataSource(this.records);
-      this.dataSource.paginator = this.paginator;
-    });
+    this.store.dispatch(
+      new RecordsActions.Delete({ recordId: docId, userId: this.userId })
+    );
+    // this.recordService.deleteRecord(docId).subscribe(() => {
+    //   this.records = this.records.filter(record => {
+    //     return record.id !== docId;
+    //   });
+    //   this.dataSource = new MatTableDataSource(this.records);
+    //   this.dataSource.paginator = this.paginator;
+    // });
   }
 
   private shapeRecordsArray(recordsData) {
