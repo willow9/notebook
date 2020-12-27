@@ -44,31 +44,31 @@ export class AuthService {
   //     );
   // }
 
-  login(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC7x1KNJw2HZ8j0S95Taf-v3gr3w5989Is",
-        {
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }
-      )
-      .pipe(
-        catchError(this.handleErrors),
-        tap(resData => {
-          this.handleAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
-          );
-        })
-      );
-  }
-  logout() {
-    this.user.next(null);
-  }
+  // login(email: string, password: string) {
+  //   return this.http
+  //     .post<AuthResponseData>(
+  //       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC7x1KNJw2HZ8j0S95Taf-v3gr3w5989Is",
+  //       {
+  //         email: email,
+  //         password: password,
+  //         returnSecureToken: true,
+  //       }
+  //     )
+  //     .pipe(
+  //       catchError(this.handleErrors),
+  //       tap(resData => {
+  //         this.handleAuthentication(
+  //           resData.email,
+  //           resData.localId,
+  //           resData.idToken,
+  //           +resData.expiresIn
+  //         );
+  //       })
+  //     );
+  // }
+  // logout() {
+  //   this.user.next(null);
+  // }
 
   private handleAuthentication(
     email: string,
@@ -82,26 +82,26 @@ export class AuthService {
     this.user.next(user);
   }
 
-  private handleErrors(errorResponse: HttpErrorResponse) {
-    let errorMessage = "An unknown error occured";
-    if (!errorResponse.error || !errorResponse.error.error) {
-      return throwError(errorMessage);
-    }
-    switch (errorResponse.error.error.message) {
-      case "EMAIL_NOT_FOUND":
-        errorMessage = "Email not found, please sign up.";
-        break;
-      case "INVALID_PASSWORD":
-        errorMessage = "Invalid password.";
-        break;
-      case "USER_DISABLED":
-        errorMessage =
-          "The user account has been disabled by an administrator.";
-        break;
-      case "EMAIL_EXISTS":
-        errorMessage = "This email exists, please login.";
-        break;
-    }
-    return throwError(errorMessage);
-  }
+  // private handleErrors(errorResponse: HttpErrorResponse) {
+  //   let errorMessage = "An unknown error occured";
+  //   if (!errorResponse.error || !errorResponse.error.error) {
+  //     return throwError(errorMessage);
+  //   }
+  //   switch (errorResponse.error.error.message) {
+  //     case "EMAIL_NOT_FOUND":
+  //       errorMessage = "Email not found, please sign up.";
+  //       break;
+  //     case "INVALID_PASSWORD":
+  //       errorMessage = "Invalid password.";
+  //       break;
+  //     case "USER_DISABLED":
+  //       errorMessage =
+  //         "The user account has been disabled by an administrator.";
+  //       break;
+  //     case "EMAIL_EXISTS":
+  //       errorMessage = "This email exists, please login.";
+  //       break;
+  //   }
+  //   return throwError(errorMessage);
+  // }
 }

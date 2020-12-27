@@ -58,8 +58,6 @@ export class AuthEffects {
         )
         .pipe(
           map(response => {
-            console.log(response);
-
             const expirationDate = new Date(
               new Date().getTime() + response.expiresIn * 1000
             );

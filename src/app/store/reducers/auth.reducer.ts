@@ -20,6 +20,8 @@ export function authReducer(
       return { ...state, user: action.payload, errorMessage: null };
     case AuthActions.SIGN_IN:
       return { ...state, user: action.payload, errorMessage: null };
+    case AuthActions.SIGN_OUT:
+      return { ...state, user: null };
     case AuthActions.AUTH_ERROR:
       return { ...state, user: null, errorMessage: action.payload };
     default:

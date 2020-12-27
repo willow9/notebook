@@ -40,7 +40,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     //   this.userId = !user ? null : user.id;
     // });
     this.userSub = this.store.select("authReducer").subscribe(state => {
-      this.userId = state.user.id;
+      if (state.user) {
+        this.userId = state.user.id;
+      }
     });
 
     this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));

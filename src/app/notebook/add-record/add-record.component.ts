@@ -97,7 +97,9 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.select("authReducer").subscribe(state => {
-      this.userId = state.user.id;
+      if (state.user) {
+        this.userId = state.user.id;
+      }
     });
     // this.authService.user.subscribe(user => {
     //   this.userId = !user ? null : user.id;

@@ -5,6 +5,7 @@ export const SIGN_UP = "SIGN_UP";
 export const SIGN_IN_STARTED = "SIGN_IN_STARTED";
 export const SIGN_IN = "SIGN_IN";
 export const AUTH_ERROR = "AUTH_EROR";
+export const SIGN_OUT = "SIGN_OUT";
 
 export class SignUpStarted implements Action {
   readonly type = SIGN_UP_STARTED;
@@ -22,6 +23,9 @@ export class SignIn implements Action {
   readonly type = SIGN_IN;
   constructor(public payload: User) {}
 }
+export class SignOut implements Action {
+  readonly type = SIGN_OUT;
+}
 export class AuthError implements Action {
   readonly type = AUTH_ERROR;
   constructor(public payload: string) {}
@@ -32,4 +36,5 @@ export type AuthActions =
   | SignUpStarted
   | AuthError
   | SignInStarted
-  | SignIn;
+  | SignIn
+  | SignOut;
