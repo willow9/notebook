@@ -42,27 +42,38 @@ export class AuthorizationComponent implements OnInit {
 
   loginUser(): void {
     if (this.rForm.status === "VALID") {
-      let authObs: Observable<AuthResponseData>;
-
-      // eslint-disable-next-line prefer-const
-      authObs = this.authService.login(
-        this.rForm.value.email,
-        this.rForm.value.password
+      this.store.dispatch(
+        new AuthActions.SignInStarted({
+          email: this.rForm.value.email,
+          password: this.rForm.value.password,
+        })
       );
+      this.store.select("authReducer").subscribe(state => {
+        // console.log(state.user);
 
-      authObs.subscribe(
-        () => {
+        if (state.user) {
           this.router.navigate(["notebook"]);
-        },
+        } else this.error = state.errorMessage;
+      });
 
-        errorMessage => {
-          this.error = errorMessage;
-          setTimeout(() => {
-            this.error = null;
-          }, 5000);
-          console.log(errorMessage);
-        }
-      );
+      // let authObs: Observable<AuthResponseData>;
+
+      // authObs = this.authService.login(
+      //   this.rForm.value.email,
+      //   this.rForm.value.password
+      // );
+      // authObs.subscribe(
+      //   () => {
+      //     this.router.navigate(["notebook"]);
+      //   },
+      //   errorMessage => {
+      //     this.error = errorMessage;
+      //     setTimeout(() => {
+      //       this.error = null;
+      //     }, 5000);
+      //     console.log(errorMessage);
+      //   }
+      // );
     }
   }
 

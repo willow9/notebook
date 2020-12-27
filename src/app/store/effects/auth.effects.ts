@@ -38,7 +38,42 @@ export class AuthEffects {
             );
           }),
           catchError(response => {
-            return of(new AuthActions.SignUpError(this.handleErrors(response)));
+            return of(new AuthActions.AuthError(this.handleErrors(response)));
+          })
+        );
+    })
+  );
+  @Effect()
+  signIn = this.actions$.pipe(
+    ofType(AuthActions.SIGN_IN_STARTED),
+    switchMap((credentials: AuthActions.SignInStarted) => {
+      return this.http
+        .post<AuthResponseData>(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC7x1KNJw2HZ8j0S95Taf-v3gr3w5989Is",
+          {
+            email: credentials.payload.email,
+            password: credentials.payload.password,
+            returnSecureToken: true,
+          }
+        )
+        .pipe(
+          map(response => {
+            console.log(response);
+
+            const expirationDate = new Date(
+              new Date().getTime() + response.expiresIn * 1000
+            );
+            return new AuthActions.SignIn(
+              new User(
+                response.email,
+                response.localId,
+                response.idToken,
+                expirationDate
+              )
+            );
+          }),
+          catchError(response => {
+            return of(new AuthActions.AuthError(this.handleErrors(response)));
           })
         );
     })

@@ -4,7 +4,6 @@ import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { RecordService } from "src/app/record.service";
 import { Record } from "../../model/record.model";
 import { MatTableDataSource } from "@angular/material/table";
-import { take } from "rxjs/operators";
 import { MatPaginator } from "@angular/material/paginator";
 import { Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
@@ -37,8 +36,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(user => {
-      this.userId = !user ? null : user.id;
+    // this.userSub = this.authService.user.subscribe(user => {
+    //   this.userId = !user ? null : user.id;
+    // });
+    this.userSub = this.store.select("authReducer").subscribe(state => {
+      this.userId = state.user.id;
     });
 
     this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));

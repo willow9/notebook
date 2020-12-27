@@ -18,9 +18,10 @@ export function authReducer(
   switch (action.type) {
     case AuthActions.SIGN_UP:
       return { ...state, user: action.payload, errorMessage: null };
-    case AuthActions.SIGN_UP_ERROR:
+    case AuthActions.SIGN_IN:
+      return { ...state, user: action.payload, errorMessage: null };
+    case AuthActions.AUTH_ERROR:
       return { ...state, user: null, errorMessage: action.payload };
-
     default:
       return { ...state };
   }
