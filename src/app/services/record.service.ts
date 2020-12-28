@@ -1,12 +1,12 @@
-import { AuthService } from "./authService";
+// import { AuthService } from "./authService";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, tap } from "rxjs/operators";
 import { Observable, Subject } from "rxjs";
-import { Record } from "./model/record.model";
+import { Record } from "../model/record.model";
 import { Store } from "@ngrx/store";
-import * as fromAppReducer from "./store/reducers/app.reducer";
-import * as RecordsActions from "./store/actions/record.actions";
+import * as fromAppReducer from "../store/reducers/app.reducer";
+import * as RecordsActions from "../store/actions/record.actions";
 
 export interface NewRecordResponse {
   name: string;
@@ -24,12 +24,12 @@ export class RecordService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
+    // private authService: AuthService,
     private store: Store<fromAppReducer.AppState>
   ) {
-    this.authService.user.subscribe(user => {
-      if (user != null) {
-        this.userId = user.id;
+    this.store.select("authReducer").subscribe(state => {
+      if (state.user != null) {
+        this.userId = state.user.id;
       } else this.userId = "";
     });
   }

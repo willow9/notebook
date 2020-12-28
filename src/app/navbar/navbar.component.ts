@@ -1,6 +1,5 @@
-import { Router } from "@angular/router";
-import { AuthService } from "./../authService";
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as fromAppReducer from "./../store/reducers/app.reducer";
@@ -16,18 +15,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logedInUser = false;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
     private store: Store<fromAppReducer.AppState>
   ) {}
 
   ngOnInit(): void {
-    this.store.select("authReducer").subscribe(state => {
+    this.userSub = this.store.select("authReducer").subscribe(state => {
       this.logedInUser = !state.user ? null : true;
     });
-    // this.userSub = this.authService.user.subscribe(user => {
-    //   this.logedInUser = !user ? null : true;
-    // });
   }
 
   logout(): void {

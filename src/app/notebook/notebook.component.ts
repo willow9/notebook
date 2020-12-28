@@ -17,9 +17,6 @@ export class NotebookComponent implements OnInit, OnDestroy {
     this.userSub = this.store.select("authReducer").subscribe(state => {
       this.logedInUser = !!state.user;
     });
-    // this.userSub = this.authService.user.subscribe(user => {
-    //   this.logedInUser = !user ? null : true;
-    // });
   }
 
   ngOnDestroy(): void {

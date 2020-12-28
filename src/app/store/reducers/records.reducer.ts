@@ -13,7 +13,7 @@ const initialState: State = {
 export function recordsReducer(
   state = initialState,
   action: RecordsActions.RecordsActions
-) {
+): State {
   switch (action.type) {
     case RecordsActions.ADD_RECORD:
       return { ...state, records: [...state.records, action.payload] };

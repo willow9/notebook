@@ -9,6 +9,7 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class RecordsEffects {
+  constructor(private actions$: Actions, private http: HttpClient) {}
   @Effect()
   recordsFetching = this.actions$.pipe(
     ofType(RecordsActions.FETCHING_STARTED),
@@ -103,6 +104,4 @@ export class RecordsEffects {
       );
     })
   );
-
-  constructor(private actions$: Actions, private http: HttpClient) {}
 }

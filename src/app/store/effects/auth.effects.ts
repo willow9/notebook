@@ -1,11 +1,11 @@
-import * as AuthActions from "./../actions/auth.actions";
+import { Injectable } from "@angular/core";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { of } from "rxjs";
 import { User } from "src/app/model/user.model";
 import { AuthResponseData } from "src/app/model/authResponseData";
+import * as AuthActions from "./../actions/auth.actions";
 
 @Injectable()
 export class AuthEffects {
@@ -25,17 +25,7 @@ export class AuthEffects {
         )
         .pipe(
           map(response => {
-            const expirationDate = new Date(
-              new Date().getTime() + response.expiresIn * 1000
-            );
-            return new AuthActions.SignUp(
-              new User(
-                response.email,
-                response.localId,
-                response.idToken,
-                expirationDate
-              )
-            );
+            return new AuthActions.SignUp(this.handleResponse(response));
           }),
           catchError(response => {
             return of(new AuthActions.AuthError(this.handleErrors(response)));
@@ -58,17 +48,7 @@ export class AuthEffects {
         )
         .pipe(
           map(response => {
-            const expirationDate = new Date(
-              new Date().getTime() + response.expiresIn * 1000
-            );
-            return new AuthActions.SignIn(
-              new User(
-                response.email,
-                response.localId,
-                response.idToken,
-                expirationDate
-              )
-            );
+            return new AuthActions.SignIn(this.handleResponse(response));
           }),
           catchError(response => {
             return of(new AuthActions.AuthError(this.handleErrors(response)));
@@ -76,6 +56,18 @@ export class AuthEffects {
         );
     })
   );
+
+  private handleResponse(response: AuthResponseData): User {
+    const expirationDate = new Date(
+      new Date().getTime() + response.expiresIn * 1000
+    );
+    return new User(
+      response.email,
+      response.localId,
+      response.idToken,
+      expirationDate
+    );
+  }
 
   private handleErrors(errorResponse: HttpErrorResponse): string {
     let errorMessage = "An unknown error occured";

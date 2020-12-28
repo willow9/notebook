@@ -1,10 +1,9 @@
-import { AuthService } from "./../../authService";
-import { Subscription } from "rxjs";
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { RecordService } from "src/app/record.service";
-import { Record } from "../../model/record.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
+import { Subscription } from "rxjs";
+import { RecordService } from "src/app/services/record.service";
+import { Record } from "../../model/record.model";
 import { Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
@@ -17,8 +16,8 @@ import * as RecordsActions from "../../store/actions/record.actions";
 export class RecordsListComponent implements OnInit, OnDestroy {
   records: Record[] = [];
   userSub: Subscription;
+  recordSub: Subscription;
   userId = null;
-  // eslint-disable-next-line prettier/prettier
   displayedColumns: string[] = [
     "phoneNumber",
     "description",
@@ -31,14 +30,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private recordService: RecordService,
-    private store: Store<fromAppReducer.AppState>,
-    private authService: AuthService
+    private store: Store<fromAppReducer.AppState>
   ) {}
 
   ngOnInit(): void {
-    // this.userSub = this.authService.user.subscribe(user => {
-    //   this.userId = !user ? null : user.id;
-    // });
     this.userSub = this.store.select("authReducer").subscribe(state => {
       if (state.user) {
         this.userId = state.user.id;
@@ -46,33 +41,18 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
 
     this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));
-    this.store.select("recordsRecucer").subscribe(state => {
+    this.recordSub = this.store.select("recordsRecucer").subscribe(state => {
       this.shapeRecordsArray(state.records);
     });
   }
 
   useForEditing(record: Record): void {
     this.recordService.editRecordEmiter.next(record);
-    // this.recordService.editedRecord.pipe(take(1)).subscribe(response => {
-    //   this.records = this.records.filter(record => {
-    //     return record.id !== response.id;
-    //   });
-    //   this.records.unshift(response);
-    //   this.dataSource = new MatTableDataSource(this.records);
-    //   this.dataSource.paginator = this.paginator;
-    // });
   }
   delete(docId: string): void {
     this.store.dispatch(
       new RecordsActions.Delete({ recordId: docId, userId: this.userId })
     );
-    // this.recordService.deleteRecord(docId).subscribe(() => {
-    //   this.records = this.records.filter(record => {
-    //     return record.id !== docId;
-    //   });
-    //   this.dataSource = new MatTableDataSource(this.records);
-    //   this.dataSource.paginator = this.paginator;
-    // });
   }
 
   private shapeRecordsArray(recordsData) {
@@ -94,5 +74,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
+    this.recordSub.unsubscribe();
   }
 }
