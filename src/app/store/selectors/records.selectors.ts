@@ -9,3 +9,7 @@ export const getRecords = createSelector(
   getRecordsState,
   (state: fromRecordsReducer.State) => state.records
 );
+export const getRecord = createSelector(
+  getRecordsState,
+  (state: fromRecordsReducer.State) => state.selectedForEditing
+);

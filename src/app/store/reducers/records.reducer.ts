@@ -4,11 +4,13 @@ import * as RecordsActions from "./../actions/record.actions";
 export interface State {
   records: Record[];
   fetchError: string;
+  selectedForEditing: Record;
 }
 
 const initialState: State = {
   records: [],
   fetchError: null,
+  selectedForEditing: null,
 };
 export function recordsReducer(
   state = initialState,
@@ -35,6 +37,11 @@ export function recordsReducer(
         records: state.records.filter(r => {
           return r.id !== action.payload.recordId;
         }),
+      };
+    case RecordsActions.SELECTED_FOR_EDITING:
+      return {
+        ...state,
+        selectedForEditing: action.payload,
       };
     default:
       return state;

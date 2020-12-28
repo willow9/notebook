@@ -6,11 +6,11 @@ import {
   FormGroupDirective,
   Validators,
 } from "@angular/forms";
-import { RecordService } from "src/app/services/record.service";
 import { select, Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
 import { getUserId } from "src/app/store/selectors/auth.selectors";
+import { getRecord } from "src/app/store/selectors/records.selectors";
 
 @Component({
   selector: "app-add-record",
@@ -26,7 +26,6 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private recordService: RecordService,
     private store: Store<fromAppReducer.AppState>
   ) {
     this.aForm = fb.group({
@@ -46,16 +45,17 @@ export class AddRecordComponent implements OnInit, OnDestroy {
         this.userId = userId;
       }
     });
-
-    this.recordService.editRecordEmiter.subscribe(record => {
-      this.recordId = record.id;
-      this.editFormToggle = true;
-      this.aForm = this.fb.group({
-        phone: [record.phoneNumber, [Validators.required]],
-        description: [record.description, [Validators.required]],
-        internal: [record.internalTitle, [Validators.required]],
-        external: [record.externalTitle, [Validators.required]],
-      });
+    this.store.pipe(select(getRecord)).subscribe(record => {
+      if (record) {
+        this.recordId = record.id;
+        this.editFormToggle = true;
+        this.aForm = this.fb.group({
+          phone: [record.phoneNumber, [Validators.required]],
+          description: [record.description, [Validators.required]],
+          internal: [record.internalTitle, [Validators.required]],
+          external: [record.externalTitle, [Validators.required]],
+        });
+      }
     });
   }
   addRecord(form: any, formDirective: FormGroupDirective): void {

@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { Subscription } from "rxjs";
-import { RecordService } from "src/app/services/record.service";
-import { Record } from "../../model/record.model";
 import { select, Store } from "@ngrx/store";
+import { Record } from "../../model/record.model";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
 import { getUserId } from "./../../store/selectors/auth.selectors";
@@ -30,10 +29,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<Record>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(
-    private recordService: RecordService,
-    private store: Store<fromAppReducer.AppState>
-  ) {}
+  constructor(private store: Store<fromAppReducer.AppState>) {}
 
   ngOnInit(): void {
     this.userSub = this.store.pipe(select(getUserId)).subscribe(userId => {
@@ -41,7 +37,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.userId = userId;
       }
     });
-    console.log(this.userId);
 
     this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));
     this.recordSub = this.store.pipe(select(getRecords)).subscribe(records => {
@@ -50,7 +45,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   useForEditing(record: Record): void {
-    this.recordService.editRecordEmiter.next(record);
+    this.store.dispatch(new RecordsActions.SelectedForEditing(record));
   }
   delete(docId: string): void {
     this.store.dispatch(
