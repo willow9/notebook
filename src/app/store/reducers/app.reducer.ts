@@ -3,10 +3,10 @@ import * as fromRecordsReducer from "../reducers/records.reducer";
 import * as fromAuthReducer from "../reducers/auth.reducer";
 
 export interface AppState {
-  recordsRecucer: fromRecordsReducer.State;
+  recordsReducer: fromRecordsReducer.State;
   authReducer: fromAuthReducer.State;
 }
 export const appReducer: ActionReducerMap<AppState> = {
-  recordsRecucer: fromRecordsReducer.recordsReducer,
+  recordsReducer: fromRecordsReducer.recordsReducer,
   authReducer: fromAuthReducer.authReducer,
 };

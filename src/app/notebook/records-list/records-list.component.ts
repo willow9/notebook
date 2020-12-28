@@ -4,9 +4,11 @@ import { MatPaginator } from "@angular/material/paginator";
 import { Subscription } from "rxjs";
 import { RecordService } from "src/app/services/record.service";
 import { Record } from "../../model/record.model";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
+import { getUserId } from "./../../store/selectors/auth.selectors";
+import { getRecords } from "./../../store/selectors/records.selectors";
 
 @Component({
   selector: "app-records-list",
@@ -34,15 +36,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userSub = this.store.select("authReducer").subscribe(state => {
-      if (state.user) {
-        this.userId = state.user.id;
+    this.userSub = this.store.pipe(select(getUserId)).subscribe(userId => {
+      if (userId) {
+        this.userId = userId;
       }
     });
+    console.log(this.userId);
 
     this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));
-    this.recordSub = this.store.select("recordsRecucer").subscribe(state => {
-      this.shapeRecordsArray(state.records);
+    this.recordSub = this.store.pipe(select(getRecords)).subscribe(records => {
+      this.shapeRecordsArray(records);
     });
   }
 

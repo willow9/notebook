@@ -7,9 +7,10 @@ import {
   Validators,
 } from "@angular/forms";
 import { RecordService } from "src/app/services/record.service";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
+import { getUserId } from "src/app/store/selectors/auth.selectors";
 
 @Component({
   selector: "app-add-record",
@@ -40,9 +41,9 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.userSub = this.store.select("authReducer").subscribe(state => {
-      if (state.user) {
-        this.userId = state.user.id;
+    this.userSub = this.store.pipe(select(getUserId)).subscribe(userId => {
+      if (userId) {
+        this.userId = userId;
       }
     });
 

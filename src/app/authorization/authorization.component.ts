@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import * as fromAppReducer from "./../store/reducers/app.reducer";
 import * as AuthActions from "./../store/actions/auth.actions";
+import { getError, getUser } from "../store/selectors/auth.selectors";
 
 @Component({
   selector: "app-authorization",
@@ -19,6 +20,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
   signInTogle = true;
   userSub: Subscription;
+  errorSub: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -47,11 +49,8 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
           password: this.rForm.value.password,
         })
       );
-      this.userSub = this.store.select("authReducer").subscribe(state => {
-        if (state.user) {
-          this.router.navigate(["notebook"]);
-        } else this.error = state.errorMessage;
-      });
+
+      this.handleAuth();
     }
   }
 
@@ -63,14 +62,21 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
           password: this.rForm.value.password,
         })
       );
-      this.userSub = this.store.select("authReducer").subscribe(state => {
-        if (state.user) {
-          this.router.navigate(["notebook"]);
-        } else this.error = state.errorMessage;
-      });
+      this.handleAuth();
     }
   }
-
+  private handleAuth() {
+    this.userSub = this.store.pipe(select(getUser)).subscribe(user => {
+      if (user) {
+        this.router.navigate(["notebook"]);
+      }
+    });
+    this.errorSub = this.store.pipe(select(getError)).subscribe(error => {
+      if (error) {
+        this.error = error;
+      }
+    });
+  }
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngOnInit(): void {}
   ngOnDestroy(): void {
