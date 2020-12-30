@@ -2,12 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { Subscription } from "rxjs";
-import { select, Store } from "@ngrx/store";
 import { Record } from "../../model/record.model";
-import * as fromAppReducer from "../../store/reducers/app.reducer";
-import * as RecordsActions from "../../store/actions/record.actions";
-import { getRecords } from "./../../store/selectors/records.selectors";
 import { AuthFacade } from "./../../store/facades/auth.facade";
+import { RecordsFacade } from "./../../store/facades/records.facade";
 
 @Component({
   selector: "app-records-list",
@@ -30,8 +27,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
-    private store: Store<fromAppReducer.AppState>,
-    private authFacade: AuthFacade
+    private authFacade: AuthFacade,
+    private recordsFacade: RecordsFacade
   ) {}
 
   ngOnInit(): void {
@@ -41,19 +38,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.store.dispatch(new RecordsActions.FetchingStarted(this.userId));
-    this.recordSub = this.store.pipe(select(getRecords)).subscribe(records => {
+    this.recordsFacade.fetchRecords(this.userId);
+    this.recordSub = this.recordsFacade.records$.subscribe(records => {
       this.shapeRecordsArray(records);
     });
   }
 
   useForEditing(record: Record): void {
-    this.store.dispatch(new RecordsActions.SelectedForEditing(record));
+    this.recordsFacade.selectForEditing(record);
   }
   delete(docId: string): void {
-    this.store.dispatch(
-      new RecordsActions.Delete({ recordId: docId, userId: this.userId })
-    );
+    this.recordsFacade.deleteRecord({ recordId: docId, userId: this.userId });
   }
 
   private shapeRecordsArray(recordsData) {

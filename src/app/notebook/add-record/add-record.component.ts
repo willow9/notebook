@@ -6,11 +6,8 @@ import {
   FormGroupDirective,
   Validators,
 } from "@angular/forms";
-import { select, Store } from "@ngrx/store";
-import * as fromAppReducer from "../../store/reducers/app.reducer";
-import * as RecordsActions from "../../store/actions/record.actions";
-import { getRecord } from "src/app/store/selectors/records.selectors";
 import { AuthFacade } from "./../../store/facades/auth.facade";
+import { RecordsFacade } from "./../../store/facades/records.facade";
 
 @Component({
   selector: "app-add-record",
@@ -22,12 +19,13 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   editFormToggle = false;
   recordId: string;
   userSub: Subscription;
+  recordSub: Subscription;
   userId = null;
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<fromAppReducer.AppState>,
-    private authFacade: AuthFacade
+    private authFacade: AuthFacade,
+    private recordsFacade: RecordsFacade
   ) {
     this.aForm = fb.group({
       phone: [
@@ -46,7 +44,7 @@ export class AddRecordComponent implements OnInit, OnDestroy {
         this.userId = user.id;
       }
     });
-    this.store.pipe(select(getRecord)).subscribe(record => {
+    this.recordSub = this.recordsFacade.selectedRecord$.subscribe(record => {
       if (record) {
         this.recordId = record.id;
         this.editFormToggle = true;
@@ -61,35 +59,32 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
   addRecord(form: any, formDirective: FormGroupDirective): void {
     if (this.aForm.status == "VALID" && this.userId) {
-      this.store.dispatch(
-        new RecordsActions.AdditionStarted({
-          record: {
-            phoneNumber: this.aForm.value.phone,
-            description: this.aForm.value.description,
-            internalTitle: this.aForm.value.internal,
-            externalTitle: this.aForm.value.external,
-          },
-          userId: this.userId,
-        })
-      );
+      this.recordsFacade.addRecord({
+        record: {
+          phoneNumber: this.aForm.value.phone,
+          description: this.aForm.value.description,
+          internalTitle: this.aForm.value.internal,
+          externalTitle: this.aForm.value.external,
+        },
+        userId: this.userId,
+      });
+
       formDirective.resetForm();
       this.aForm.reset();
     }
   }
 
   editRecord(form, formDirective: FormGroupDirective): void {
-    this.store.dispatch(
-      new RecordsActions.EditingStarted({
-        record: {
-          phoneNumber: this.aForm.value.phone,
-          description: this.aForm.value.description,
-          internalTitle: this.aForm.value.internal,
-          externalTitle: this.aForm.value.external,
-          id: this.recordId,
-        },
-        userId: this.userId,
-      })
-    );
+    this.recordsFacade.editRecord({
+      record: {
+        phoneNumber: this.aForm.value.phone,
+        description: this.aForm.value.description,
+        internalTitle: this.aForm.value.internal,
+        externalTitle: this.aForm.value.external,
+        id: this.recordId,
+      },
+      userId: this.userId,
+    });
 
     formDirective.resetForm();
     this.aForm.reset();
@@ -98,5 +93,6 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
+    this.recordSub.unsubscribe();
   }
 }
