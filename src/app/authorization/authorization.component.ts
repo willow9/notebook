@@ -2,10 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { select, Store } from "@ngrx/store";
-import * as fromAppReducer from "./../store/reducers/app.reducer";
-import * as AuthActions from "./../store/actions/auth.actions";
-import { getError, getUser } from "../store/selectors/auth.selectors";
+import { AuthFacade } from "./../store/facades/auth.facade";
 
 @Component({
   selector: "app-authorization",
@@ -25,7 +22,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private store: Store<fromAppReducer.AppState>
+    private authFacade: AuthFacade
   ) {
     this.rForm = fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -43,12 +40,10 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
   loginUser(): void {
     if (this.rForm.status === "VALID") {
-      this.store.dispatch(
-        new AuthActions.SignInStarted({
-          email: this.rForm.value.email,
-          password: this.rForm.value.password,
-        })
-      );
+      this.authFacade.login({
+        email: this.rForm.value.email,
+        password: this.rForm.value.password,
+      });
 
       this.handleAuth();
     }
@@ -56,22 +51,20 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
   registerUser(): void {
     if (this.rForm.status === "VALID") {
-      this.store.dispatch(
-        new AuthActions.SignUpStarted({
-          email: this.rForm.value.email,
-          password: this.rForm.value.password,
-        })
-      );
+      this.authFacade.register({
+        email: this.rForm.value.email,
+        password: this.rForm.value.password,
+      });
       this.handleAuth();
     }
   }
   private handleAuth() {
-    this.userSub = this.store.pipe(select(getUser)).subscribe(user => {
+    this.userSub = this.authFacade.user$.subscribe(user => {
       if (user) {
         this.router.navigate(["notebook"]);
       }
     });
-    this.errorSub = this.store.pipe(select(getError)).subscribe(error => {
+    this.errorSub = this.authFacade.errorMessage$.subscribe(error => {
       if (error) {
         this.error = error;
       }
@@ -81,5 +74,6 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
+    this.errorSub.unsubscribe();
   }
 }

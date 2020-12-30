@@ -6,8 +6,8 @@ import { select, Store } from "@ngrx/store";
 import { Record } from "../../model/record.model";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
-import { getUserId } from "./../../store/selectors/auth.selectors";
 import { getRecords } from "./../../store/selectors/records.selectors";
+import { AuthFacade } from "./../../store/facades/auth.facade";
 
 @Component({
   selector: "app-records-list",
@@ -29,12 +29,15 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<Record>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(private store: Store<fromAppReducer.AppState>) {}
+  constructor(
+    private store: Store<fromAppReducer.AppState>,
+    private authFacade: AuthFacade
+  ) {}
 
   ngOnInit(): void {
-    this.userSub = this.store.pipe(select(getUserId)).subscribe(userId => {
-      if (userId) {
-        this.userId = userId;
+    this.userSub = this.authFacade.user$.subscribe(user => {
+      if (user) {
+        this.userId = user.id;
       }
     });
 

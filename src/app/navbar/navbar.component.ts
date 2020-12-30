@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { select, Store } from "@ngrx/store";
-import * as fromAppReducer from "./../store/reducers/app.reducer";
-import * as AuthActions from "./../store/actions/auth.actions";
-import { getUser } from "../store/selectors/auth.selectors";
+import { AuthFacade } from "./../store/facades/auth.facade";
 
 @Component({
   selector: "app-navbar",
@@ -15,19 +12,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userSub: Subscription;
   logedInUser = false;
 
-  constructor(
-    private router: Router,
-    private store: Store<fromAppReducer.AppState>
-  ) {}
+  constructor(private router: Router, private authFacade: AuthFacade) {}
 
   ngOnInit(): void {
-    this.userSub = this.store.pipe(select(getUser)).subscribe(user => {
+    this.userSub = this.authFacade.user$.subscribe(user => {
       this.logedInUser = !!user;
     });
   }
 
   logout(): void {
-    this.store.dispatch(new AuthActions.SignOut());
+    this.authFacade.logout();
     this.router.navigate(["/"]);
   }
 

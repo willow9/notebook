@@ -9,8 +9,8 @@ import {
 import { select, Store } from "@ngrx/store";
 import * as fromAppReducer from "../../store/reducers/app.reducer";
 import * as RecordsActions from "../../store/actions/record.actions";
-import { getUserId } from "src/app/store/selectors/auth.selectors";
 import { getRecord } from "src/app/store/selectors/records.selectors";
+import { AuthFacade } from "./../../store/facades/auth.facade";
 
 @Component({
   selector: "app-add-record",
@@ -26,7 +26,8 @@ export class AddRecordComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<fromAppReducer.AppState>
+    private store: Store<fromAppReducer.AppState>,
+    private authFacade: AuthFacade
   ) {
     this.aForm = fb.group({
       phone: [
@@ -40,9 +41,9 @@ export class AddRecordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.userSub = this.store.pipe(select(getUserId)).subscribe(userId => {
-      if (userId) {
-        this.userId = userId;
+    this.userSub = this.authFacade.user$.subscribe(user => {
+      if (user) {
+        this.userId = user.id;
       }
     });
     this.store.pipe(select(getRecord)).subscribe(record => {

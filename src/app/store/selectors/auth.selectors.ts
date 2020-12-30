@@ -13,7 +13,3 @@ export const getError = createSelector(
   getAuthState,
   (state: fromAuthReducer.State) => state.errorMessage
 );
-export const getUserId = createSelector(
-  getAuthState,
-  (state: fromAuthReducer.State) => state.user.id
-);
