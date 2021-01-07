@@ -1,7 +1,6 @@
-import { EditRecord } from "../actions/record.actions";
 import { HttpClient } from "@angular/common/http";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { forkJoin, Observable, of, pipe } from "rxjs";
+import { forkJoin, of } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
 import * as RecordsActions from "../actions/record.actions";
 import { Record } from "../../model/record.model";
