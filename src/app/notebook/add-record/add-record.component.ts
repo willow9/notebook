@@ -57,7 +57,7 @@ export class AddRecordComponent implements OnInit, OnDestroy {
       }
     });
   }
-  addRecord(form: any, formDirective: FormGroupDirective): void {
+  addRecord(formDirective: FormGroupDirective): void {
     if (this.aForm.status == "VALID" && this.userId) {
       this.recordsFacade.addRecord({
         record: {
@@ -70,11 +70,10 @@ export class AddRecordComponent implements OnInit, OnDestroy {
       });
 
       formDirective.resetForm();
-      this.aForm.reset();
     }
   }
 
-  editRecord(form, formDirective: FormGroupDirective): void {
+  editRecord(formDirective: FormGroupDirective): void {
     this.recordsFacade.editRecord({
       record: {
         phoneNumber: this.aForm.value.phone,
@@ -87,8 +86,12 @@ export class AddRecordComponent implements OnInit, OnDestroy {
     });
 
     formDirective.resetForm();
-    this.aForm.reset();
     this.editFormToggle = false;
+  }
+  cancel(formDirective: FormGroupDirective): void {
+    this.recordsFacade.selectForEditing(null);
+    this.editFormToggle = false;
+    formDirective.resetForm();
   }
 
   ngOnDestroy(): void {
